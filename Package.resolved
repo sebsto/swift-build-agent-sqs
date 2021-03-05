@@ -29,6 +29,15 @@
         }
       },
       {
+        "package": "swift-crypto",
+        "repositoryURL": "https://github.com/apple/swift-crypto.git",
+        "state": {
+          "branch": null,
+          "revision": "0141f53dd525706c803b0c20aa8ad36f9ecd45e5",
+          "version": "1.1.5"
+        }
+      },
+      {
         "package": "swift-log",
         "repositoryURL": "https://github.com/apple/swift-log.git",
         "state": {
