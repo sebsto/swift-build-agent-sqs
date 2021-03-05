@@ -43,8 +43,8 @@ while true {
         print("Going to execute : \(filePath)")
         
         if #available(OSX 10.13, *) {
-            let (result, error) = executeCommand(cmd: filePath)
-            let response = "*** STDERR ***\n" + error + "\n\n*** STDOUT ***\n" + result
+            let (result, error, exitCode) = executeCommand(cmd: filePath)
+            let response = "\(exitCode)\n\n*** STDERR ***\n" + error + "\n\n*** STDOUT ***\n" + result
             
             sqsManager.postResponse(queueUrl: responseQueue, correlationId: correlationid, response: response)
         } else {
@@ -56,7 +56,7 @@ while true {
 }
 
 @available(OSX 10.13, *)
-func executeCommand(cmd: String, args: [String] = []) -> (String, String) {
+func executeCommand(cmd: String, args: [String] = []) -> (String, String, Int32) {
     let task = Process()
     task.executableURL = URL(fileURLWithPath: cmd)
 
@@ -70,6 +70,7 @@ func executeCommand(cmd: String, args: [String] = []) -> (String, String) {
     task.standardError = errorPipe
     
     try? task.run()
+    task.waitUntilExit()
     
     let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
     let errorData = errorPipe.fileHandleForReading.readDataToEndOfFile()
@@ -77,7 +78,7 @@ func executeCommand(cmd: String, args: [String] = []) -> (String, String) {
     let output = String(decoding: outputData, as: UTF8.self)
     let error = String(decoding: errorData, as: UTF8.self)
     
-    return (output, error)
+    return (output, error, task.terminationStatus)
 }
 
 func printUsage() {

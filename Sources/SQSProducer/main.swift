@@ -38,10 +38,11 @@ guard fm.fileExists(atPath: filePath) else {
 let sqsManager = SQSManager(requestQueueUrl: requestQueue, responseQueueUrl: responseQueue)
 
 let message  = try String(contentsOfFile: filePath, encoding: String.Encoding.utf8)
-let response = try? sqsManager.sendRequestWithResponse(body: message)
-print("response received: ", response ?? "[error]" )
+let (response, exitCode) = try sqsManager.sendRequestWithResponse(body: message)
+print("response received: ", response )
+
+exit(exitCode)
 
 func printUsage() {
     print("Usage: SQSProducer https://request_queue_url https://response_queue_url /path/to/command/file")
-
 }
