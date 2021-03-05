@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.amazon.build.mac.agent</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>/Users/ec2-user/SQSBuildAgent</string>
+        <string>https://sqs.us-east-2.amazonaws.com/486652066693/cicd-command</string>
+    </array>
+    <key>KeepAlive</key>
+    <true/>
+    <key>UserName</key>
+    <string>ec2-user</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StandardErrorPath</key>
+    <string>/Users/ec2-user/log/build-agent.log</string>
+    <key>StandardOutPath</key>
+    <string>/Users/ec2-user/log/build-agent.log</string>
+</dict>
+</plist>
