@@ -37,11 +37,10 @@ public class SQSManager {
         self.requestQueueUrl  = requestQueueUrl
         self.responseQueueUrl = responseQueueUrl
 
-        if (SQSManager.onEC2()) {
-            client = AWSClient(credentialProvider: .selector(.ec2, .configFile()) ,httpClientProvider: .createNew)
-        } else {
-            client = AWSClient(httpClientProvider: .createNew)
-        }
+        // ec2 is used when the tool runs on a EC2 instance.
+        // ecs is used when the tool runs in a AWS CodeBuild container
+        // configFile() is used on my laptop 
+        client = AWSClient(credentialProvider: .selector(.configFile(), .ec2, .ecs) ,httpClientProvider: .createNew)
         sqs    = SQS(client: client, region: .useast2)
 
     }
@@ -68,7 +67,7 @@ public class SQSManager {
     
     // sync function. It returns the response message body
     // TODO manage timeouts
-    public func sendRequestWithResponse(body : String) throws -> String {
+    public func sendRequestWithResponse(body : String) throws -> (String, Int32) {
         
         guard let responseQueue = self.responseQueueUrl else {
             throw MessageError.noResponseQueue
@@ -92,7 +91,7 @@ public class SQSManager {
         return try self.pollForResponse(queueURL: responseQueue, correlationId: uuid)
     }
     
-    private func pollForResponse(queueURL: String, correlationId : String) throws -> String {
+    private func pollForResponse(queueURL: String, correlationId : String) throws -> (String, Int32) {
         
         // Poll for messages, waiting for up to 15 seconds
         let request = SQS.ReceiveMessageRequest(maxNumberOfMessages: 10, messageAttributeNames: [ "All" ], queueUrl: queueURL, waitTimeSeconds: 15)
@@ -130,7 +129,17 @@ public class SQSManager {
         // returns just the body of the first message
         let data = Data(base64Encoded: matchingMessages[0].body ?? "")
         let result = String(data: data!, encoding: String.Encoding.utf8)
-        return result!
+        
+        guard let r = result else {
+            print("Can not decode result")
+            return ("", -1)
+        }
+        
+        guard let exitCode = Int32(r.split(separator: "\n")[0]) else {
+            print("Can not extract exit code from response :", r)
+            return (r, -1)
+        }
+        return (r, exitCode)
     }
     
     private func deleteMessage(queueUrl : String, message : SQS.Message) {
