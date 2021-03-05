@@ -13,6 +13,9 @@
     <true/>
     <key>UserName</key>
     <string>ec2-user</string>
+    <!-- require for keychain access -->
+    <key>SessionCreate</key>
+    <true/>    
     <key>RunAtLoad</key>
     <true/>
     <key>StandardErrorPath</key>
