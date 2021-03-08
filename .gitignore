@@ -6,3 +6,5 @@ xcuserdata/
 .swiftpm
 dist/SQSBuildAgent.zip
 docker/SQSProducer
+run.sh
+
