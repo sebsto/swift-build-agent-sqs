@@ -8,9 +8,6 @@
 import Foundation
 import SQSAgentLib
 
-//public let requestQueue  = "https://sqs.us-east-2.amazonaws.com/486652066693/cicd-command"
-//public let responseQueue = "https://sqs.us-east-2.amazonaws.com/486652066693/cicd-response"
-
 let arguments = ProcessInfo.processInfo.arguments
 guard arguments.count == 2 else {
     printUsage()

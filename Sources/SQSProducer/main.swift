@@ -32,9 +32,6 @@ guard fm.fileExists(atPath: filePath) else {
     exit(-1)
 }
 
-//public let requestQueue  = "https://sqs.us-east-2.amazonaws.com/486652066693/cicd-command"
-//public let responseQueue = "https://sqs.us-east-2.amazonaws.com/486652066693/cicd-response"
-
 let sqsManager = SQSManager(requestQueueUrl: requestQueue, responseQueueUrl: responseQueue)
 
 let message  = try String(contentsOfFile: filePath, encoding: String.Encoding.utf8)
