@@ -92,7 +92,7 @@ sudo cp dist/com.amazon.build.mac.agent.plist /Library/Daemons
 
 The file contains instructions to run the agent and the required parameters.  Please update the `ProgramArgumets`to replace with your command queue URL.
 
-```plist
+```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
