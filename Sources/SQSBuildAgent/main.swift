@@ -40,9 +40,11 @@ while true {
         print("Going to execute : \(filePath)")
         
         if #available(OSX 10.13, *) {
-            let (result, error, exitCode) = executeCommand(cmd: filePath)
-            let response = "\(exitCode)\n\n*** STDERR ***\n" + error + "\n\n*** STDOUT ***\n" + result
-            
+            // let (result, error, exitCode) = executeCommand(cmd: filePath)
+            // let response = "\(exitCode)\n\n*** STDERR ***\n" + error + "\n\n*** STDOUT ***\n" + result
+            let (result, exitCode) = shell(filePath)
+            let response = "\(exitCode)\n\n*** STDERR *** STDOUT ***\n\n" + result
+
             sqsManager.postResponse(queueUrl: responseQueue, correlationId: correlationid, response: response)
         } else {
             print("Only works on macOS 10.13 or more recent")
@@ -76,6 +78,24 @@ func executeCommand(cmd: String, args: [String] = []) -> (String, String, Int32)
     let error = String(decoding: errorData, as: UTF8.self)
     
     return (output, error, task.terminationStatus)
+}
+
+@available(OSX 10.13, *)
+func shell(_ command: String) -> (String, Int32) {
+    let task = Process()
+    let pipe = Pipe()
+    
+    task.standardOutput = pipe
+    task.standardError = pipe
+    task.arguments = ["-c", command]
+    task.launchPath = "/bin/zsh"
+    task.launch()
+    task.waitUntilExit()
+    
+    let data = pipe.fileHandleForReading.readDataToEndOfFile()
+    let output = String(data: data, encoding: .utf8)!
+    
+    return (output, task.terminationStatus)
 }
 
 func printUsage() {
