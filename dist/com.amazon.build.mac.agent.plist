@@ -6,7 +6,7 @@
     <string>com.amazon.build.mac.agent</string>
     <key>ProgramArguments</key>
     <array>
-        <string>/Users/ec2-user/SQSBuildAgent</string>
+        <string>/Users/ec2-user/build_agent/SQSBuildAgent</string>
         <string>https://sqs.us-east-2.amazonaws.com/486652066693/cicd-command</string>
     </array>
     <key>KeepAlive</key>
