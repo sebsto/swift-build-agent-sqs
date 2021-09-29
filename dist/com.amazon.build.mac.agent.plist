@@ -11,13 +11,17 @@
     </array>
     <key>KeepAlive</key>
     <true/>
-    <key>UserName</key>
-    <string>ec2-user</string>
     <!-- require for keychain access -->
     <key>SessionCreate</key>
     <true/>    
     <key>RunAtLoad</key>
     <true/>
+    <key>Disabled</key>
+    <false/>
+    <key>UserName</key>
+    <string>ec2-user</string>
+    <key>GroupName</key>
+    <string>staff</string>    
     <key>StandardErrorPath</key>
     <string>/Users/ec2-user/log/build-agent.log</string>
     <key>StandardOutPath</key>
